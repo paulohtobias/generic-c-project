@@ -2,7 +2,7 @@
 CC = gcc
 CFLAGS = -g -Wall -MMD
 
-#Binary
+#Binary and Running
 ifeq ($(OS),Windows_NT)
     BIN = main.exe
 else
@@ -58,3 +58,13 @@ $(ODIR)/%.o: $(SDIR)/%$(SOURCE)
 .PHONY : clean
 clean :
 	-rm $(BIN) $(OBJS) $(DEPS)
+
+init:
+	mkdir include
+	mkdir src
+	mkdir obj
+	mkdir "obj/windows"
+	mkdir "obj/linux"
+
+run:
+	./$(BIN)
