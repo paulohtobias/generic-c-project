@@ -1,54 +1,56 @@
 #Main Makefile
-CC = gcc
-CFLAGS = -g -Wall -MMD
+CC := gcc
+CFLAGS := -g -Wall -MMD
 
 #Binary
 ifeq ($(OS),Windows_NT)
-    BIN = main.exe
+	BIN := main.exe
+	DLE := dll
 else
-    BIN = main.out
+	BIN := main.out
+	DLE := so
 endif
 
 #Directories
-IDIR = ./include
-SDIR = ./src
+IDIR := ./include
+SDIR := ./src
 
 ifeq ($(OS),Windows_NT)
-	ODIR = ./obj/windows
+	ODIR := ./obj/windows
 else
-	ODIR = ./obj/linux
+	ODIR := ./obj/linux
 endif
 
 #Files
-SOURCE = .c
+SOURCE := .c
 
 #Paths
-INCLUDE_PATHS = -I$(IDIR)
+INCLUDE_PATHS := -I$(IDIR)
 
 #Libraries
-LIBS = 
-#CFLAGS+= `pkg-config --cflags $(LIBS)`
-#LIBRARIES = `pkg-config --libs $(LIBS)`
+LIBS :=
+#CFLAGS += `pkg-config --cflags $(LIBS)`
+#LIBRARIES := `pkg-config --libs $(LIBS)`
 
 #Compilation line
-COMPILE = $(CC) $(CFLAGS) $(INCLUDE_PATHS)
+COMPILE := $(CC) $(CFLAGS) $(INCLUDE_PATHS)
 
 #FILEs
 #---------------Source----------------#
-SRCS = $(wildcard $(SDIR)/*$(SOURCE)) $(wildcard $(SDIR)/*/*$(SOURCE))
+SRCS := $(wildcard $(SDIR)/*$(SOURCE)) $(wildcard $(SDIR)/*/*$(SOURCE))
 
 #---------------Object----------------#
-OBJS = $(SRCS:$(SDIR)/%$(SOURCE)=$(ODIR)/%.o)
+OBJS := $(SRCS:$(SDIR)/%$(SOURCE)=$(ODIR)/%.o)
 #-------------Dependency--------------#
-DEPS = $(SRCS:$(SDIR)/%$(SOURCE)=$(ODIR)/%.d)
+DEPS := $(SRCS:$(SDIR)/%$(SOURCE)=$(ODIR)/%.d)
 
 all: $(OBJS)
 	$(COMPILE) $(OBJS) main$(SOURCE) -o $(BIN) $(LIBRARIES)
 
-dll: LIBRARIES+= -lm -fPIC
+dll: LIBRARIES += -lm -fPIC
 dll: LIB_NAME = lib
 dll: $(OBJS)
-	$(COMPILE) -shared -o $(LIB_NAME).so $(OBJS) $(LIBRARIES)
+	$(COMPILE) -shared -o $(LIB_NAME).$(DLE) $(OBJS) $(LIBRARIES)
 
 # Include all .d files
 -include $(DEPS)
