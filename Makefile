@@ -2,11 +2,11 @@
 CC = gcc
 CFLAGS = -g -Wall -MMD
 
-#Binary and Running
+#Binary
 ifeq ($(OS),Windows_NT)
     BIN = main.exe
 else
-    BIN = main
+    BIN = main.out
 endif
 
 #Directories
@@ -27,8 +27,8 @@ INCLUDE_PATHS = -I$(IDIR)
 
 #Libraries
 LIBS = 
-CFLAGS+= `pkg-config --cflags $(LIBS)`
-LIBRARIES = `pkg-config --libs $(LIBS)`
+#CFLAGS+= `pkg-config --cflags $(LIBS)`
+#LIBRARIES = `pkg-config --libs $(LIBS)`
 
 #Compilation line
 COMPILE = $(CC) $(CFLAGS) $(INCLUDE_PATHS)
@@ -46,8 +46,9 @@ all: $(OBJS)
 	$(COMPILE) $(OBJS) main$(SOURCE) -o $(BIN) $(LIBRARIES)
 
 dll: LIBRARIES+= -lm -fPIC
+dll: LIB_NAME = lib
 dll: $(OBJS)
-	$(COMPILE) -shared -o libguisdl.so $(OBJS) $(LIBRARIES)
+	$(COMPILE) -shared -o $(LIB_NAME).so $(OBJS) $(LIBRARIES)
 
 # Include all .d files
 -include $(DEPS)
@@ -60,11 +61,11 @@ clean :
 	-rm $(BIN) $(OBJS) $(DEPS)
 
 init:
-	mkdir include
-	mkdir src
-	mkdir obj
-	mkdir "obj/windows"
-	mkdir "obj/linux"
+	mkdir -p include
+	mkdir -p src
+	mkdir -p obj
+	mkdir -p obj/windows
+	mkdir -p obj/linux
 
 run:
 	./$(BIN)
