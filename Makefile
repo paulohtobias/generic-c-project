@@ -48,9 +48,9 @@ all: $(OBJS)
 	$(COMPILE) $(OBJS) main$(SOURCE) -o $(BIN) $(LIBRARIES)
 
 dll: LIBRARIES += -lm -fPIC
-dll: LIB_NAME = lib
+dll: LIB_NAME :=
 dll: $(OBJS)
-	$(COMPILE) -shared -o $(LIB_NAME).$(DLE) $(OBJS) $(LIBRARIES)
+	$(COMPILE) -shared -o lib$(LIB_NAME).$(DLE) $(OBJS) $(LIBRARIES)
 
 # Include all .d files
 -include $(DEPS)
