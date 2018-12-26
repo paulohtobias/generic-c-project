@@ -30,7 +30,7 @@ INCLUDE_PATHS := -I$(IDIR)
 #Libraries
 LIBS :=
 #CFLAGS += `pkg-config --cflags $(LIBS)`
-#LIBRARIES := `pkg-config --libs $(LIBS)`
+#LOADLIBES := `pkg-config --libs $(LIBS)`
 
 #Compilation line
 COMPILE := $(CC) $(CFLAGS) $(INCLUDE_PATHS)
@@ -45,18 +45,18 @@ OBJS := $(SRCS:$(SDIR)/%$(SOURCE)=$(ODIR)/%.o)
 DEPS := $(SRCS:$(SDIR)/%$(SOURCE)=$(ODIR)/%.d)
 
 all: $(OBJS)
-	$(COMPILE) $(OBJS) main$(SOURCE) -o $(BIN) $(LIBRARIES)
+	$(COMPILE) $(OBJS) main$(SOURCE) -o $(BIN) $(LOADLIBES)
 
-dll: LIBRARIES += -lm -fPIC
+dll: LOADLIBES += -lm -fPIC
 dll: LIB_NAME :=
 dll: $(OBJS)
-	$(COMPILE) -shared -o lib$(LIB_NAME).$(DLE) $(OBJS) $(LIBRARIES)
+	$(COMPILE) -shared -o lib$(LIB_NAME).$(DLE) $(OBJS) $(LOADLIBES)
 
 # Include all .d files
 -include $(DEPS)
 
 $(ODIR)/%.o: $(SDIR)/%$(SOURCE)
-	$(COMPILE) -c $< -o $@ $(LIBRARIES)
+	$(COMPILE) -c $< -o $@ $(LOADLIBES)
 
 .PHONY : clean
 clean :
