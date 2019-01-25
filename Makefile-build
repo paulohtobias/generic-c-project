@@ -20,34 +20,31 @@ endif
 # Library name for dll
 LIB_NAME :=
 
-# OS-dependent extensions
+# OS-dependent variables
 ifeq ($(OS),Windows_NT)
 	BIN := main-$(TARGET).exe
 	DLE := dll
+	ODIR := obj/windows
+
+	CFLAGS+= -mno-ms-bitfields
 #	LOADLIBES := -municode
 else
 	BIN := main-$(TARGET).out
 	DLE := so
+	ODIR := obj/linux
 endif
 
 # Directories
 IDIR := include
 SDIR := src
 
-# OS-dependent directories
-ifeq ($(OS),Windows_NT)
-	ODIR := obj/windows
-else
-	ODIR := obj/linux
-endif
-
 # Include Paths
 INCLUDE_PATHS := -I$(IDIR)
 
 # Libraries
-LIBS := str-utils
-CFLAGS += `pkg-config --cflags $(LIBS)`
-LOADLIBES += `pkg-config --libs $(LIBS)`
+LIBS :=
+#CFLAGS += `pkg-config --cflags $(LIBS)`
+#LOADLIBES += `pkg-config --libs $(LIBS)`
 
 #Compilation line
 COMPILE := $(CC) $(CFLAGS) $(INCLUDE_PATHS)
